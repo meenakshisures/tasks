@@ -1,0 +1,62 @@
+
+.form-container {
+    max-width: 600px;  /* Limit the form width */
+    margin: 0 auto;    /* Center the form on the page */
+    padding: 20px;     /* Add padding around the form */
+    border: 1px solid #ccc;  /* Add a border to the form */
+    border-radius: 10px;     /* Make the form corners rounded */
+    background-color: #f9f9f9; /* Light background color */
+}
+
+/* Style the form header */
+.form-header {
+    text-align: center;  /* Center the form title */
+    margin-bottom: 20px; /* Add some space below the title */
+}
+
+/* Style each row in the form */
+.form-row {
+    margin-bottom: 15px; /* Add space between rows */
+}
+
+/* Style each group of input fields and labels */
+.form-group {
+    display: flex;                /* Align label and input fields */
+    flex-direction: column;       /* Stack label and input vertically */
+}
+
+/* Style input fields and select dropdowns */
+.form-control {
+    padding: 10px;                /* Add padding inside input */
+    font-size: 16px;              /* Make the text larger */
+    border: 1px solid #ccc;       /* Add a border around input */
+    border-radius: 4px;           /* Round the input corners */
+    width: 100%;                  /* Make input fill the width */
+    margin-top: 5px;              /* Add space between label and input */
+    box-sizing: border-box;       /* Ensure padding is inside the input field */
+}
+
+/* Style buttons */
+.btn {
+    padding: 10px 20px;           /* Add padding to buttons */
+    margin: 10px;           /* Add space between buttons */
+    background-color: green;      /* Green background */
+    color: white;                 /* White text */
+    border: none;                 /* Remove border */
+    border-radius: 5px;           /* Rounded corners */
+    cursor: pointer;              /* Show pointer when hovering */
+}
+.new{
+    background-color: white;
+    color: green;
+    padding: 10px 20px;           /* Add padding to buttons */
+    margin: 10px;           /* Add space between buttons */
+    border: none;                 /* Remove border */
+    border-radius: 5px;           /* Rounded corners */
+    cursor: pointer;   
+}
+/* Add hover effect on buttons */
+.btn:hover {
+    background-color: darkgreen;  /* Darker green when hovered */
+}
+.text-danger{color:red}

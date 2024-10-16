@@ -1,0 +1,60 @@
+<div class="form-header">
+  <h2>Reactive Form</h2>
+</div>
+<div class="form-container">
+  <form [formGroup]="userForm">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="">Username</label>
+        <input type="text" class="form-control" formControlName="username" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="">Email</label>
+        <input type="email" class="form-control" formControlName="email" />
+      </div>
+    </div>
+    <div class="form-row">
+        <div class="form-group">
+          <label for="">Password</label>
+          <input type="password" class="form-control" formControlName="password">
+          <div *ngIf="userForm.controls['password'].invalid && userForm.controls['password'].touched">
+            <small class="text-danger" *ngIf="userForm.controls['password'].errors?.required">
+              Password is required.
+            </small>
+            <small class="text-danger" *ngIf="userForm.controls['password'].errors?.minlength || userForm.controls['password'].errors?.maxlength">
+              Password must be exactly 8 characters long.
+            </small>
+            <small class="text-danger" *ngIf="userForm.controls['password'].errors?.pattern">
+              Password must contain only letters and numbers (no special characters).
+            </small>
+          </div>
+        </div>
+      </div>
+      
+    <div class="form-row">
+      <div class="form-group">
+        <label for="">Age</label>
+        <input type="number" class="form-control" formControlName="age" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label for="gender">Gender</label>
+        <select class="form-control" formControlName="gender" (change)="onGenderChange($event)">
+          <option value="" disabled>Select Gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <button type="submit" [disabled]="userForm.invalid" class="btn" (click)="onRegister()">Register</button>
+        <button type="reset"  class="new" (click)="onCancel()">Cancel</button>
+      </div>
+    </div>
+  </form>
+</div>
