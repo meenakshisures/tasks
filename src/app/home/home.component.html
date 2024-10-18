@@ -1,2 +1,26 @@
 <p>Welcome to the Home Page!</p>
 <button (click)="logout()">Logout</button>
+<div class="tableView">
+  <table id="new">
+    <thead>
+      <tr class>
+        <th>Id</th>
+        <th>Name</th>
+        <th>Adress</th>
+      </tr>
+      <tr *ngFor="let user of users;let f = first">
+        
+        <td [ngClass]="{'one':f}">m{{user.id}}</td>
+        <!-- <td *ngIf="!f" >m{{user.id}}</td> -->
+        <td>{{user.name}}</td>
+        <td>
+            {{user.address.suite}}<br />
+            {{user.address.street}}<br />
+            {{user.address.city}}<br />
+            {{user.address.zipcode}}
+        </td>
+      </tr>
+     
+    </thead>
+  </table>
+</div>
