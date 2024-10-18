@@ -21,4 +21,8 @@ export class UserService {
   setUserList2(user,age=5){}
 
   setUserList3(user=5,age){}
+  getAndUpdateUserList(){
+    let user=JSON.parse(localStorage.getItem('userList'));
+    this.setUserList(user)
+  }
 }
