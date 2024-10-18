@@ -52,4 +52,7 @@ export class LoginComponent {
       alert('Form is not valid. Please enter valid credentials.');
     }
   }
+  goToRegister(){
+    this.router.navigate(['/signup'])
+  }
 }
