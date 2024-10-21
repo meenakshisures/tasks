@@ -1,0 +1,24 @@
+table{
+    background-color: #fafafa;
+    color: rgb(90, 125, 131);
+    /* padding: 50px; */
+    margin:10px;
+    border: 2px solid ;
+    border-collapse: collapse;
+    width:100%;
+}
+table,th,td{
+    color:rgb(40, 3, 82);
+    border:2px double;
+    padding: 5px;
+   text-align: center;
+}
+th{
+    background-color: beige;
+}
+.tableView{
+ padding: 5px;
+}
+.one{
+    background-color:teal
+}
