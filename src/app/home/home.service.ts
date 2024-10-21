@@ -5,17 +5,23 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class HomeService {
-  constructor(private http: HttpClient) {}
-  getUsers() {
-    //   this.http.get("https://jsonplaceholder.typicode.com/users")
-    //   .subscribe(data=>{
-    //       console.log('data',data)
-    //   },err=>{
-    //     console.log('err',err)
 
-    //   })
-    // }
-    return this.http.get<any>("https://jsonplaceholder.typicode.com/users");
+  url = "https://jsonplaceholder.typicode.com/users";
+
+  constructor(private http: HttpClient) {}
+
+  // Get all users
+  getUsers() {
+    return this.http.get<any>(this.url);
   }
-  abc = () => {};
+
+  // Delete a user by ID
+  deleteUser(userId: number) {
+    return this.http.delete(`${this.url}/${userId}`);
+  }
+
+  // Edit (update) a user by ID
+  editUser(userId: number, updatedData: any) {
+    return this.http.put(`${this.url}/${userId}`, updatedData);
+  }
 }
