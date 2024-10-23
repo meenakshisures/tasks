@@ -11,13 +11,17 @@ import { HomeService } from './home.service';
 })
 export class HomeComponent implements CanComponentDeactivate {
   users: any[] = [];
+  formDirty: boolean = true; // Example: Assume the form is dirty or unsaved
 
   constructor(
     private authService: AuthService,
     private api: HomeService,
     private router: Router
-  ) {
+  ) {this.getUsers();
     // Fetch users from the API on component load
+    
+  }
+  getUsers(){
     this.api.getUsers().subscribe(
       (data) => {
         console.log('data', data);
@@ -35,7 +39,6 @@ export class HomeComponent implements CanComponentDeactivate {
     this.router.navigate(['/login']); // Redirect to login
   }
 
-  formDirty: boolean = true; // Example: Assume the form is dirty or unsaved
 
   canDeactivate(): boolean {
     if (this.formDirty) {
@@ -52,11 +55,9 @@ export class HomeComponent implements CanComponentDeactivate {
       (response) => {
         console.log('User updated:', response);
         // Update the local users array with the new data
-        const index = this.users.findIndex(u => u.id === user.id);
-        if (index !== -1) {
-          this.users[index] = response;
-        }
+       this.getUsers();
       },
+      
       (err) => {
         console.log('Error updating user:', err);
       }
@@ -69,7 +70,8 @@ export class HomeComponent implements CanComponentDeactivate {
       (response) => {
         console.log('User deleted:', response);
         // Remove the user from the local users array
-        this.users = this.users.filter(u => u.id !== user.id);
+        // this.users = this.users.filter(u => u.id !== user.id);
+      this.getUsers();
       },
       (err) => {
         console.log('Error deleting user:', err);
