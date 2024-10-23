@@ -25,8 +25,16 @@ export class HomeComponent implements CanComponentDeactivate {
     this.api.getUsers().subscribe(
       (data) => {
         console.log('data', data);
-        this.users = data;
+        this.users = data.map(m=>{
+          console.log(m);
+          m["date"]=new Date();
+          console.log(m.date)
+          return m;
+          
+        });
+        console.log(this.users)
       },
+
       (err) => {
         console.log('err', err);
       }

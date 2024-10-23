@@ -8,6 +8,7 @@
         <th>Id</th>
         <th>Name</th>
         <th>Address</th>
+        <th>Date</th>
         <th>Edit</th>
         <th>Delete</th>
       </tr>
@@ -15,13 +16,15 @@
     <tbody>
       <tr *ngFor="let user of users; let f = first">
         <td [ngClass]="{'one': f}">{{user.id}}</td>
-        <td>{{user.name}}</td>
+        <td>{{user.name|nameLength:5:2}}</td>
+
         <td>
           {{user.address?.suite}}<br />
           {{user.address?.street}}<br />
           {{user.address?.city}}<br />
           {{user.address?.zipcode}}
         </td>
+        <td>{{user.date | date:'shortDate'}}</td>
         
         <td>
           <button (click)="onEdit(user)">Edit</button> <!-- Pass full user object -->
