@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { UsingFormGroupComponent } from './forms/using-form-group/using-form-group.component';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
-
+import { HttpClientModule } from '@angular/common/http'; 
 @NgModule({
   declarations: [
     AppComponent,
@@ -18,7 +18,7 @@ import { HomeComponent } from './home/home.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule  
+    ReactiveFormsModule  ,HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
