@@ -7,13 +7,15 @@ import { AppComponent } from './app.component';
 import { UsingFormGroupComponent } from './forms/using-form-group/using-form-group.component';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
-import { HttpClientModule } from '@angular/common/http'; 
+import { HttpClientModule } from '@angular/common/http';
+import { NameLengthPipe } from './name-length.pipe'; 
 @NgModule({
   declarations: [
     AppComponent,
     UsingFormGroupComponent,
     LoginComponent,
-    HomeComponent  
+    HomeComponent,
+    NameLengthPipe  
   ],
   imports: [
     BrowserModule,
