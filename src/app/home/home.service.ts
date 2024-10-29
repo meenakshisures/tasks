@@ -5,23 +5,22 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class HomeService {
-
   url = "https://jsonplaceholder.typicode.com/users";
 
   constructor(private http: HttpClient) {}
 
   // Get all users
-  getUsers() {
-    return this.http.get<any>(this.url);
+  getUsers(): Promise<any> {
+    return this.http.get<any>(this.url).toPromise();
   }
 
   // Delete a user by ID
-  deleteUser(userId: number) {
-    return this.http.delete(`${this.url}/${userId}`);
+  deleteUser(userId: number): Promise<any> {
+    return this.http.delete(`${this.url}/${userId}`).toPromise();
   }
 
   // Edit (update) a user by ID
-  editUser(userId: number, updatedData: any) {
-    return this.http.put(`${this.url}/${userId}`, updatedData);
+  editUser(userId: number, updatedData: any): Promise<any> {
+    return this.http.put(`${this.url}/${userId}`, updatedData).toPromise();
   }
 }
