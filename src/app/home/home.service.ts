@@ -1,50 +1,36 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HomeService {
   url = "https://jsonplaceholder.typicode.com/users";
+  url2 =  "https://jsonplaceholder.typicode.com/todos/1"
 
   constructor(private http: HttpClient) {}
 
-  // Get all users
-  async getUsers(): Promise<any> {
-    console.log("Fetching users...");  // Log before calling await
-    try {
-      const response = await this.http.get<any>(this.url).toPromise();
-      console.log("Users fetched successfully:", response); // Log after await
-      return response;
-    } catch (error) {
-      console.error("Error fetching users:", error);
-      throw error;
-    }
+  // Get all users as an observable
+  getUsers(): Observable<any> {
+    console.log("Fetching users as observable...");
+    return this.http.get<any>(this.url);
+  }
+  getUsers1(): Observable<any> {
+    console.log("Fetching users as observable1...");
+    return this.http.get<any>(this.url2);
   }
 
-  // Delete a user by ID
-  async deleteUser(userId: number): Promise<any> {
-    console.log(`Deleting user with ID ${userId}...`);
-    try {
-      const response = await this.http.delete(`${this.url}/${userId}`).toPromise();
-      console.log("User deleted:", response);
-      return response;
-    } catch (error) {
-      console.error("Error deleting user:", error);
-      throw error;
-    }
+
+  // Delete a user by ID as an observable
+  deleteUser(userId: number): Observable<any> {
+    console.log(`Deleting user with ID ${userId} as observable...`);
+    return this.http.delete(`${this.url}/${userId}`);
   }
 
-  // Edit (update) a user by ID
-  async editUser(userId: number, updatedData: any): Promise<any> {
-    console.log(`Updating user with ID ${userId}...`);
-    try {
-      const response = await this.http.put(`${this.url}/${userId}`, updatedData).toPromise();
-      console.log("User updated:", response);
-      return response;
-    } catch (error) {
-      console.error("Error updating user:", error);
-      throw error;
-    }
+  // Edit (update) a user by ID as an observable
+  editUser(userId: number, updatedData: any): Observable<any> {
+    console.log(`Updating user with ID ${userId} as observable...`);
+    return this.http.put(`${this.url}/${userId}`, updatedData);
   }
 }
