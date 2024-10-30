@@ -18,23 +18,18 @@ export class HomeComponent implements CanComponentDeactivate {
     private api: HomeService,
     private router: Router
   ) {
-    // Fetch users from the API on component load
-    this.getUsers();
+    this.getUsers(); // Call getUsers on component load
   }
 
-  getUsers() {
-    this.api.getUsers()
-      .then(data => {
-        console.log('data', data);
-        this.users = data.map(m => {
-          m["date"] = new Date();
-          return m;
-        });
-        console.log(this.users);
-      })
-      .catch(err => {
-        console.log('Error fetching users:', err);
-      });
+  // Async method to get users
+  async getUsers() {
+    console.log("Calling getUsers() from HomeService...");
+    try {
+      this.users = await this.api.getUsers();
+      console.log("Users in component:", this.users);
+    } catch (err) {
+      console.error("Error in component's getUsers:", err);
+    }
   }
 
   // Logout method
@@ -43,6 +38,7 @@ export class HomeComponent implements CanComponentDeactivate {
     this.router.navigate(['/login']);
   }
 
+  // CanDeactivate guard implementation
   canDeactivate(): boolean {
     if (this.formDirty) {
       return confirm('You have unsaved changes. Do you really want to leave?');
@@ -50,28 +46,28 @@ export class HomeComponent implements CanComponentDeactivate {
     return true;
   }
 
-  // Edit a user
-  onEdit(user: any) {
+  // Async method to edit a user
+  async onEdit(user: any) {
+    console.log(`Editing user with ID ${user.id}...`);
     const updatedUserData = { name: 'Updated Name', email: 'updated@example.com' };
-    this.api.editUser(user.id, updatedUserData)
-      .then(response => {
-        console.log('User updated:', response);
-        this.getUsers();  // Refresh users list after update
-      })
-      .catch(err => {
-        console.log('Error updating user:', err);
-      });
+    try {
+      await this.api.editUser(user.id, updatedUserData);
+      console.log("User edited successfully.");
+      await this.getUsers();  // Refresh users list after update
+    } catch (err) {
+      console.error("Error editing user in component:", err);
+    }
   }
 
-  // Delete a user
-  onDelete(user: any) {
-    this.api.deleteUser(user.id)
-      .then(response => {
-        console.log('User deleted:', response);
-        this.getUsers();  // Refresh users list after deletion
-      })
-      .catch(err => {
-        console.log('Error deleting user:', err);
-      });
+  // Async method to delete a user
+  async onDelete(user: any) {
+    console.log(`Deleting user with ID ${user.id}...`);
+    try {
+      await this.api.deleteUser(user.id);
+      console.log("User deleted successfully.");
+      await this.getUsers();  // Refresh users list after deletion
+    } catch (err) {
+      console.error("Error deleting user in component:", err);
+    }
   }
 }
