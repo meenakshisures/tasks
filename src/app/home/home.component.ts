@@ -3,7 +3,7 @@ import { CanDeactivate, Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { CanComponentDeactivate } from '../can-deactivate.guard';
 import { HomeService } from './home.service';
-import { Observable, of, Subject } from 'rxjs';
+import { forkJoin, Observable, of, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
@@ -15,14 +15,14 @@ export class HomeComponent implements CanComponentDeactivate, OnDestroy {
   users: any[] = [];
   formDirty: boolean = true;
   private unsubscribe$ = new Subject<void>(); // For managing subscriptions
-  title:string="Hey";
+  title: string = 'Hey';
   constructor(
     private authService: AuthService,
     private api: HomeService,
     private router: Router
   ) {
-    this.getUsers(); // Call getUsers on component load
-    
+    // this.getUsers(); // Call getUsers on component load
+  this.forkJoinApi();
   }
 
   // Observable method to get users
@@ -44,8 +44,24 @@ export class HomeComponent implements CanComponentDeactivate, OnDestroy {
   }
   callApi() {
     this.api.getUsers1().subscribe(
-      (data) => {console.log(data),this.title=data.title},
-      (err) => {console.log(err)}
+      (data) => {
+        console.log(data), (this.title = data.title);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
+  }
+  forkJoinApi() {
+    forkJoin([this.api.getUsers(), this.api.getUsers1()]).subscribe(
+      (results) => {
+        console.log(results);
+        this.users = results[0];
+        this.title = results[1].title;
+      },
+      (err) => {
+        console.log(err);
+      }
     );
   }
   // Logout method
