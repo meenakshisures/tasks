@@ -5,13 +5,21 @@ import { LoginComponent } from './login/login.component';  // Import login compo
 import { HomeComponent } from './home/home.component';    // Import home component
 import { AuthGuard } from './auth.guard';                 // Import AuthGuard
 import { CanDeactivateGuard } from './can-deactivate.guard';
+import { ProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
   { path: 'signup', component: UsingFormGroupComponent },  // Registration form
+  { path: 'profile', component: ProfileComponent },  // Registration form
   { path: 'login', component: LoginComponent },             // Login page
-  { path: 'home', component: HomeComponent, canActivate: [AuthGuard],canDeactivate:[CanDeactivateGuard] }, // Home page protected by AuthGuard
-  { path: '', redirectTo: '/login', pathMatch: 'full' },   // Default path to form-group
+  { path: 'home', component: HomeComponent, canActivate: [AuthGuard],canDeactivate:[CanDeactivateGuard],
+    children:[
+      { path: '123', component:  ProfileComponent, pathMatch: 'full' },   // Default path to form-group
+      { path: '**', redirectTo: '/home', pathMatch: 'full' }  // Wildcard route
+    ]
+   }, // Home page protected by AuthGuard
+  { path: '', redirectTo: '/home', pathMatch: 'full' },   // Default path to form-group
   { path: '**', redirectTo: '/login', pathMatch: 'full' }  // Wildcard route
+
 ];
 
 @NgModule({

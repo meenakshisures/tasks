@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy ,OnInit} from '@angular/core';
 import { CanDeactivate, Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { CanComponentDeactivate } from '../can-deactivate.guard';
@@ -11,7 +11,7 @@ import { takeUntil } from 'rxjs/operators';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements CanComponentDeactivate, OnDestroy {
+export class HomeComponent implements CanComponentDeactivate, OnDestroy ,OnInit{
   users: any[] = [];
   formDirty: boolean = true;
   private unsubscribe$ = new Subject<void>(); // For managing subscriptions
@@ -20,11 +20,16 @@ export class HomeComponent implements CanComponentDeactivate, OnDestroy {
     private authService: AuthService,
     private api: HomeService,
     private router: Router
-  ) {
+  ) 
+  
+  {
+    console.log('From Constructor');
     // this.getUsers(); // Call getUsers on component load
   this.forkJoinApi();
   }
-
+ngOnInit(): void {
+  console.log('From ngonInit');
+}
   // Observable method to get users
   getUsers() {
     console.log('Subscribing to getUsers() observable from HomeService...');
@@ -64,12 +69,7 @@ export class HomeComponent implements CanComponentDeactivate, OnDestroy {
       }
     );
   }
-  // Logout method
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
-
+ 
   // CanDeactivate guard implementation
   canDeactivate(): boolean {
     if (this.formDirty) {

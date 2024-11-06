@@ -8,14 +8,16 @@ import { UsingFormGroupComponent } from './forms/using-form-group/using-form-gro
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { HttpClientModule } from '@angular/common/http';
-import { NameLengthPipe } from './name-length.pipe'; 
+import { NameLengthPipe } from './name-length.pipe';
+import { ProfileComponent } from './profile/profile.component'; 
 @NgModule({
   declarations: [
     AppComponent,
     UsingFormGroupComponent,
     LoginComponent,
     HomeComponent,
-    NameLengthPipe  
+    NameLengthPipe,
+    ProfileComponent  
   ],
   imports: [
     BrowserModule,

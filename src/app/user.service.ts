@@ -6,12 +6,14 @@ import { Injectable } from '@angular/core';
 export class UserService {
 
   users:any[]=[];
+  currentUser:any;
   //it gets invoked initially
   constructor() {
     // this.setUserList(this.users,22)
     // this.setUserList2(this.users)
     // this.setUserList3(this.users)
    }
+   
    //this is a method with two arguments,first one is  a type any,second one is a number both are required
   setUserList(userList:any){
     this.users=userList;

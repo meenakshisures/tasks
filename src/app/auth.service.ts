@@ -12,5 +12,6 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('userToken'); // Clear the token
+    localStorage.removeItem('currentUser'); // Clear the token,since after refreshing the localstorage has the username saved
   }
 }
