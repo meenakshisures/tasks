@@ -6,18 +6,17 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { UsingFormGroupComponent } from './forms/using-form-group/using-form-group.component';
 import { LoginComponent } from './login/login.component';
-import { HomeComponent } from './home/home.component';
+
 import { HttpClientModule } from '@angular/common/http';
 import { NameLengthPipe } from './name-length.pipe';
-import { ProfileComponent } from './profile/profile.component'; 
+
 @NgModule({
   declarations: [
     AppComponent,
     UsingFormGroupComponent,
     LoginComponent,
-    HomeComponent,
-    NameLengthPipe,
-    ProfileComponent  
+   
+    
   ],
   imports: [
     BrowserModule,

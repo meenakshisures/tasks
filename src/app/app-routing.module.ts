@@ -11,11 +11,8 @@ const routes: Routes = [
   { path: 'signup', component: UsingFormGroupComponent },  // Registration form
   { path: 'profile', component: ProfileComponent },  // Registration form
   { path: 'login', component: LoginComponent },             // Login page
-  { path: 'home', component: HomeComponent, canActivate: [AuthGuard],canDeactivate:[CanDeactivateGuard],
-    children:[
-      { path: '123', component:  ProfileComponent, pathMatch: 'full' },   // Default path to form-group
-      { path: '**', redirectTo: '/home', pathMatch: 'full' }  // Wildcard route
-    ]
+  { path: 'home', 
+    loadChildren:()=>import('./home/home.module').then(m=>m.HomeModule)
    }, // Home page protected by AuthGuard
   { path: '', redirectTo: '/home', pathMatch: 'full' },   // Default path to form-group
   { path: '**', redirectTo: '/login', pathMatch: 'full' }  // Wildcard route
