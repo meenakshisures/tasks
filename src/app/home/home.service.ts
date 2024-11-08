@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HomeService {
- ur="https://jsonplaceholder.typicode.com";//since a part of url is same ,we store this in  a variable
+ ur = environment.ur; // Access the API URL based on the environment//since a part of url is same ,we store this in  a variable
  
 
   constructor(private http: HttpClient) {}
