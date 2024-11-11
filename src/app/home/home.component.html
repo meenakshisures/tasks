@@ -1,40 +1,74 @@
-<p>Welcome to the Home Page!</p>
-<app-profile></app-profile>
-<!-- used for showing to the child componenet <router-outlet></router-outlet> -->
-<p>{{title}}</p>
-<div [innerHTML]="newvariable"></div>
-<div class="tableView">
-  <table id="new">
-    <thead>
-      <tr>
-        <th>Id</th>
-        <th>Name</th>
-        <th>Address</th>
-        <th>Date</th>
-        <th>Edit</th>
-        <th>Delete</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let user of users; let f = first">
-        <td [ngClass]="{'one': f}">{{user.id}}</td>
-        <td>{{user.name|nameLength:5:2}}</td>
+<div [formGroup]="userFormsGroup">
+  <table mat-table [dataSource]="users" class="mat-elevation-z8">
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef> ID </th>
+      <td mat-cell *matCellDef="let user; let i = index">
+        {{ user.id }}
+      </td>
+    </ng-container>
 
-        <td>
-          {{user.address?.suite}}<br />
-          {{user.address?.street}}<br />
-          {{user.address?.city}}<br />
-          {{user.address?.zipcode}}
-        </td>
-        <td>{{user.date | date:'shortDate'}}</td>
-        
-        <td>
-          <button (click)="onEdit(user)">Edit</button> <!-- Pass full user object -->
-        </td>
-        <td>
-          <button (click)="onDelete(user)">Delete</button> <!-- Pass full user object -->
-        </td>
-      </tr>
-    </tbody>
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> Name </th>
+      <td mat-cell *matCellDef="let user; let i = index">
+        <input
+          *ngIf="editingRowId === user.id"
+          [formControl]="userForms.at(i).get('name')"
+        />
+        <span *ngIf="editingRowId !== user.id">{{ user.name }}</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef> Email </th>
+      <td mat-cell *matCellDef="let user; let i = index">
+        <input
+          *ngIf="editingRowId === user.id"
+          [formControl]="userForms.at(i).get('email')"
+        />
+        <span *ngIf="editingRowId !== user.id">{{ user.email }}</span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="address">
+      <th mat-header-cell *matHeaderCellDef> Address </th>
+      <td mat-cell *matCellDef="let user; let i = index">
+        <div *ngIf="editingRowId === user.id">
+          <input
+            placeholder="Street"
+            [formControl]="userForms.at(i).get('addressStreet')"
+          />
+          <input
+            placeholder="Suite"
+            [formControl]="userForms.at(i).get('addressSuite')"
+          />
+          <input
+            placeholder="City"
+            [formControl]="userForms.at(i).get('addressCity')"
+          />
+        </div>
+        <span *ngIf="editingRowId !== user.id">
+          {{ user.address.street }}, {{ user.address.suite }},
+          {{ user.address.city }}
+        </span>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef> Actions </th>
+      <td mat-cell *matCellDef="let user; let i = index">
+        <button *ngIf="editingRowId !== user.id" (click)="enableEditing(user.id)">
+          Edit
+        </button>
+        <button *ngIf="editingRowId === user.id" (click)="saveEdit(user.id)">
+          Save
+        </button>
+        <button *ngIf="editingRowId === user.id" (click)="cancelEdit()">
+          Cancel
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
 </div>

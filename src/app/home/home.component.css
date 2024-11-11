@@ -1,7 +1,7 @@
-table{
+/* table{
     background-color: #fafafa;
     color: rgb(90, 125, 131);
-    /* padding: 50px; */
+    
     margin:10px;
     border: 2px solid ;
     border-collapse: collapse;
@@ -21,4 +21,27 @@ th{
 }
 .one{
     background-color:teal
+} */
+table {
+    width: 100%;
+  }
+  
+  th.mat-sort-header-sorted {
+    color: black;
+  }
+  .abc{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
 }
+/* Center align the header cells */
+th.mat-header-cell {
+    text-align: center;
+  }
+  
+  /* Center align the data cells if desired */
+  td.mat-cell {
+    text-align: center;
+  }
+  

@@ -1,143 +1,135 @@
-// Import essential Angular and RxJS modules needed for this component
-import { Component, OnDestroy, OnInit } from '@angular/core';  // Allows us to create components and handle initialization/destruction logic
-import { ActivatedRoute, CanDeactivate, Router } from '@angular/router';  // Used for handling routes and route data
-import { AuthService } from '../auth.service';  // Service for authentication logic
-import { CanComponentDeactivate } from '../can-deactivate.guard';  // Guard to check if the component can be left
-import { HomeService } from './home.service';  // Service for handling API calls specific to this component
-import { forkJoin, Observable, of, Subject } from 'rxjs';  // RxJS utilities for managing data streams
-import { takeUntil } from 'rxjs/operators';  // Operator to manage subscriptions
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from '../auth.service';
+import { CanComponentDeactivate } from '../can-deactivate.guard';
+import { HomeService } from './home.service';
+import { forkJoin, Subject, of } from 'rxjs';
+import { catchError, takeUntil } from 'rxjs/operators';
+import { FormBuilder, FormGroup, FormControl, FormArray } from '@angular/forms';
 
-// Define the component, including template, styles, and metadata
 @Component({
-  selector: 'app-home',  // HTML tag to use this component
-  templateUrl: './home.component.html',  // Path to the component's HTML file
-  styleUrls: ['./home.component.css'],  // Path to the component's CSS file
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css'],
 })
-// Define the HomeComponent class, which implements a guard (CanComponentDeactivate) and lifecycle hooks (OnDestroy, OnInit)
 export class HomeComponent implements CanComponentDeactivate, OnDestroy, OnInit {
-  users: any[] = [];  // Array to hold user data fetched from an API
-  newvariable: any = "<div><p>Heyoo</p></div>";  // Example HTML content to be used within the component
-  formDirty: boolean = true;  // Boolean to track if there are unsaved form changes
-  private unsubscribe$ = new Subject<void>();  // Subject used to manage and clean up subscriptions
-  title: string = 'Hey';  // Title property initialized with a default value
-
-  // Constructor to inject services and router for this component
+  users: any[] = [];
+  editingRowId: number | null = null;
+  formDirty: boolean = true;
+  private unsubscribe$ = new Subject<void>();
+  title: string = 'Hey';
+  displayedColumns: string[] = ['id', 'name', 'email', 'address', 'actions'];
+  userFormsGroup: FormGroup; // Store a FormGroup containing a FormArray for user forms
+  // testForm: FormGroup;
+  userForms: FormArray = this.fb.array([]); 
   constructor(
-    private authService: AuthService,  // Injects AuthService to manage authentication tasks
-    private api: HomeService,  // Injects HomeService for API calls
-    private router: Router,  // Router service to navigate between pages
-    private route: ActivatedRoute  // ActivatedRoute to get current route details
+    private authService: AuthService,
+    private api: HomeService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private fb: FormBuilder
   ) {
-    console.log('From Constructor');  // Logs when the constructor is called
-    this.forkJoinApi();  // Calls the forkJoinApi method to make multiple API calls simultaneously
+    console.log('From Constructor');
+    this.forkJoinApi();
+
+    // Initialize the main FormGroup with a FormArray
+    this.userFormsGroup = this.fb.group({
+      userForms: this.fb.array([]),
+    });
   }
 
-  // Lifecycle hook method that runs after component initialization
   ngOnInit(): void {
-    console.log('From ngOnInit');  // Logs when ngOnInit is called
-    console.log('Route', this.router.url);  // Logs the current route URL
-    console.log('ActivatedRoute', this.route);  // Logs the ActivatedRoute object
-
-    // Subscribe to route parameter changes
-    this.route.params.subscribe(m => console.log("Params", m));  // Logs route parameters
-    this.route.queryParams.subscribe(m => console.log("QParams", m));  // Logs query parameters
+    console.log('From ngOnInit');
+    this.getUsers();
   }
 
-  // Method to fetch users from the API using an observable
   getUsers() {
-    console.log('Subscribing to getUsers() observable from HomeService...');
-    this.api.getUsers()  // Calls getUsers from HomeService
-      .pipe(takeUntil(this.unsubscribe$))  // Ensures the subscription is unsubscribed when component is destroyed
+    this.api.getUsers()
+      .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
-        next: (users) => {  // On successful response, executes this block
-          this.users = users;  // Updates users array with fetched data
-          this.callApi();  // Calls another API method for additional data
-          console.log('Users in component:', this.users);  // Logs users array
+        next: (users) => {
+          this.users = users;
+          this.initUserForms(); // Initialize form groups for each user
         },
-        error: (err) => {  // Error handling if API call fails
-          console.error("Error in component's getUsers:", err);  // Logs error message
+        error: (err) => {
+          console.error('Error in component\'s getUsers:', err);
+          alert('Failed to fetch users. Please try again later.');
         },
       });
   }
 
-  // Additional API call to fetch more user data
-  callApi() {
-    this.api.getUsers1().subscribe(
-      (data) => {
-        console.log(data);
-        this.title = data.title;  // Updates title with fetched data
-      },
-      (err) => {
-        console.log(err);  // Logs error if call fails
-      }
-    );
+  initUserForms() {
+    // Clear existing forms in the Fo
+      this.users.forEach(user => {
+        this.userForms.push(this.fb.group({
+          name: new FormControl(user.name || ''),
+          email: new FormControl(user.email),
+          addressStreet: new FormControl(user.address?.street || ''),
+          addressSuite: new FormControl(user.address?.suite || ''),
+          addressCity: new FormControl(user.address?.city || ''),
+        }));
+      });
   }
 
-  // Makes two API calls at once and handles both results together
+  enableEditing(userId: number) {
+    this.editingRowId = userId;
+  }
+
+  saveEdit(userId: number) {
+    const userForm = this.userForms.at(userId);
+    if (userForm.valid) {
+      const updatedUser = {
+        id: userId,
+        name: userForm.value.name,
+        email: userForm.value.email,
+        address: {
+          street: userForm.value.addressStreet,
+          suite: userForm.value.addressSuite,
+          city: userForm.value.addressCity,
+        },
+      };
+
+      this.api.editUser(userId, updatedUser).subscribe({
+        next: () => {
+          console.log('User updated successfully');
+          this.editingRowId = null;
+          this.getUsers();
+        },
+        error: (err) => {
+          console.error('Error updating user:', err);
+        },
+      });
+    }
+  }
+
   forkJoinApi() {
     forkJoin([this.api.getUsers(), this.api.getUsers1()]).subscribe(
       (results) => {
-        console.log(results);  // Logs results from both API calls
-        this.users = results[0];  // Sets first result as users array
-        this.title = results[1].title;  // Sets title based on second result
+        console.log(results);
+        this.users = results[0];
+        this.title = results[1].title;
       },
       (err) => {
-        console.log(err);  // Logs error if either API call fails
+        console.log(err);
       }
     );
   }
 
-  // Guard method to confirm if user wants to leave with unsaved changes
   canDeactivate(): boolean {
-    if (this.formDirty) {  // Checks if form has unsaved changes
-      return confirm('You have unsaved changes. Do you really want to leave?');  // Shows confirmation alert
+    if (this.formDirty) {
+      return confirm('You have unsaved changes. Do you really want to leave?');
     }
-    return true;  // Allows navigation if no unsaved changes
+    return true;
   }
 
-  // Method to edit a user's data
-  onEdit(user: any) {
-    console.log(`Editing user with ID ${user.id}...`);  // Logs which user is being edited
-
-    const updatedUserData = {
-      name: 'Updated Name',  // New name for the user
-      email: 'updated@example.com',  // New email for the user
-    };
-
-    this.api.editUser(user.id, updatedUserData)  // Calls API to edit user
-      .pipe(takeUntil(this.unsubscribe$))  // Unsubscribes when component is destroyed
-      .subscribe({
-        next: () => {
-          console.log('User edited successfully.');
-          this.getUsers();  // Refreshes user list after edit
-        },
-        error: (err) => {
-          console.error('Error editing user in component:', err);  // Logs error if API call fails
-        },
-      });
+  cancelEdit() {
+    this.editingRowId = null;
+    this.getUsers();
   }
 
-  // Method to delete a user from the list
-  onDelete(user: any) {
-    console.log(`Deleting user with ID ${user.id}...`);  // Logs which user is being deleted
-
-    this.api.deleteUser(user.id)  // Calls API to delete user
-      .pipe(takeUntil(this.unsubscribe$))  // Unsubscribes when component is destroyed
-      .subscribe({
-        next: () => {
-          console.log('User deleted successfully.');
-          this.getUsers();  // Refreshes user list after deletion
-        },
-        error: (err) => {
-          console.error('Error deleting user in component:', err);  // Logs error if API call fails
-        },
-      });
-  }
-
-  // Lifecycle hook to clean up all subscriptions when component is destroyed
   ngOnDestroy() {
-    this.unsubscribe$.next();  // Sends signal to unsubscribe from all observables
-    this.unsubscribe$.complete();  // Completes the unsubscribe$ observable
-    console.log('Unsubscribed from all observables in HomeComponent.');  // Logs confirmation of cleanup
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+    console.log('Unsubscribed from all observables in HomeComponent.');
   }
 }

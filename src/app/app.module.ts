@@ -14,14 +14,18 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // Import Angular Material Modules
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import {MatCardModule} from '@angular/material/card';
+import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
+import { AddressPipe } from './address.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     UsingFormGroupComponent,
-    LoginComponent
+    LoginComponent,
+   
   ],
   imports: [
     BrowserModule,
@@ -29,10 +33,12 @@ import { MatSelectModule } from '@angular/material/select';
     ReactiveFormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    MatInputModule, // Material input fields
-    MatButtonModule,  // Material buttons
+    MatInputModule,
+    MatButtonModule,
     MatCardModule,
-    MatSelectModule
+    MatSelectModule,
+    MatTableModule,  // <-- Add MatTableModule here
+    MatIconModule    // <-- Add MatIconModule here for icons
   ],
   providers: [
     {
@@ -41,6 +47,6 @@ import { MatSelectModule } from '@angular/material/select';
       multi: true
     }
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
