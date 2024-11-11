@@ -1,0 +1,22 @@
+/* h2{
+    text-align: center;
+    color:black
+}
+*/
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly
+}
+/*
+.mat-card{
+    background-color: #fff;
+    color: black;
+    width: 350px;
+    margin: 0 auto;
+}
+::ng-deep .mat-form-field-label{
+    color: blueviolet !important;
+} */
