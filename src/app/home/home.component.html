@@ -59,6 +59,9 @@
         <button *ngIf="editingRowId !== user.id" (click)="enableEditing(user.id)">
           Edit
         </button>
+        <button *ngIf="editingRowId !== user.id" (click)="onDelete(user.id)">
+          Delete
+        </button>
         <button *ngIf="editingRowId === user.id" (click)="saveEdit(user.id)">
           Save
         </button>
